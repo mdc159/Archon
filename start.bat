@@ -1,4 +1,5 @@
 @echo off
 cd /d X:\GitHub\Archon
 call venv\Scripts\activate.bat
-cmd /k 
+streamlit run streamlit_ui.py
+pause 
