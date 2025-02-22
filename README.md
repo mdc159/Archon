@@ -6,8 +6,8 @@
 
 <h3>🚀 **CURRENT VERSION** 🚀</h3>
 
-**[ V2 - Agentic Workflow ]**
-*Using LangGraph + Pydantic AI for multi-agent orchestration and planning*
+**[ V3 - MCP Support ]**
+*Using LangGraph + Pydantic AI with AI IDE integration*
 
 </div>
 
@@ -18,7 +18,7 @@ Archon will be developed in iterations, starting with just a simple Pydantic AI 
 all the way to a full agentic workflow using LangGraph that can build other AI agents with any framework.
 Through its iterative development, Archon showcases the power of planning, feedback loops, and domain-specific knowledge in creating robust AI agents.
 
-The current version of Archon is V2 as mentioned above - see [V2 Documentation](iterations/v2-agentic-workflow/README.md) for details.
+The current version of Archon is V3 as mentioned above - see [V3 Documentation](iterations/v3-mcp-support/README.md) for details.
 
 ## Vision
 
@@ -38,15 +38,20 @@ Archon demonstrates three key principles in modern AI development:
 - [Learn more about V1](iterations/v1-single-agent/README.md)
 
 ### V2: Current - Agentic Workflow (LangGraph)
-
 - Multi-agent system with planning and execution separation
 - Reasoning LLM (O3-mini/R1) for architecture planning
 - LangGraph for workflow orchestration
 - Support for local LLMs via Ollama
 - [Learn more about V2](iterations/v2-agentic-workflow/README.md)
 
-### Future Iterations
+### V3: Current - MCP Support
+- Integration with AI IDEs like Windsurf and Cursor
+- Automated file creation and dependency management
+- FastAPI service for agent generation
+- Improved project structure and organization
+- [Learn more about V3](iterations/v3-mcp-support/README.md)
 
+### Future Iterations
 - V3: Self-Feedback Loop - Automated validation and error correction
 - V4: Tool Library Integration - Pre-built external tool incorporation
 - V5: Multi-Framework Support - Framework-agnostic agent generation
@@ -56,13 +61,13 @@ Archon demonstrates three key principles in modern AI development:
 
 - Docker
 - LangSmith
-- MCP
 - Other frameworks besides Pydantic AI
 - Other vector databases besides Supabase
+- Alternative embedding models besides OpenAI
 
-## Getting Started with V2 (current version)
+## Getting Started with V3 (current version)
 
-Since V2 is the current version of Archon, all the code for V2 is in both the `archon` and `archon/iterations/v2-agentic-workflow` directories.
+Since V3 is the current version of Archon, all the code for V3 is in both the `archon` and `archon/iterations/v3-mcp-support` directories.
 
 ### Prerequisites
 
@@ -70,8 +75,13 @@ Since V2 is the current version of Archon, all the code for V2 is in both the `a
 - Supabase account and database
 - OpenAI/OpenRouter API key or Ollama for local LLMs
 - Streamlit (for web interface)
+- Windsurf, Cursor, or another MCP-compatible AI IDE (optional)
 
 ### Installation
+
+There are two ways to install Archon V3:
+
+#### Option 1: Standard Installation (for Streamlit UI)
 
 1. Clone the repository:
 
@@ -88,7 +98,42 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Configure environment:
+#### Option 2: MCP Server Setup (for AI IDE integration)
+
+1. Clone the repository as above
+
+2. Run the MCP setup script:
+```bash
+python setup_mcp.py
+```
+
+For running the crawler and graph service later, activate the virtual environment too:
+
+```bash
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+This will:
+- Create a virtual environment if it doesn't exist
+- Install dependencies from requirements.txt
+- Generate an MCP configuration file
+
+3. Configure your AI IDE:
+   - **In Windsurf**:
+        - Click on the hammer icon above the chat input
+        - Click on "Configure"
+        - Paste the JSON that `setup_mcp.py` gave you as the MCP config
+        - Click "Refresh" next to "Configure"
+   - **In Cursor**:
+        - Go to Cursor Settings > Features > MCP
+        - Click on "+ Add New MCP Server"
+        - Name: Archon
+        - Type: command (equivalent to stdio)
+        - Command: Paste the command that `setup_mcp.py` gave for Cursor
+
+### Environment Setup
+
+1. Configure environment:
    - Rename `.env.example` to `.env`
    - Edit `.env` with your settings:
 
@@ -105,27 +150,24 @@ pip install -r requirements.txt
 ### Quick Start
 
 1. Set up the database:
-   - Execute `site_pages.sql` in your Supabase SQL Editor
+   - Execute `utils/site_pages.sql` in your Supabase SQL Editor
    - This creates tables and enables vector similarity search
 
 2. Crawl documentation:
 
 ```bash
-python crawl_pydantic_ai_docs.py
+python archon/crawl_pydantic_ai_docs.py
 ```
 
 3. Launch the UI:
-
 ```bash
 streamlit run streamlit_ui.py
 ```
 
-Visit `http://localhost:8501` to start building AI agents!
-
+The interface will be available at `http://localhost:8501`
 ## Architecture
 
 ### Current V2 Components
-
 - `archon_graph.py`: LangGraph workflow and agent coordination
 - `pydantic_ai_coder.py`: Main coding agent with RAG capabilities
 - `crawl_pydantic_ai_docs.py`: Documentation processor
@@ -161,3 +203,4 @@ For version-specific details:
 
 - [V1 Documentation](iterations/v1-single-agent/README.md)
 - [V2 Documentation](iterations/v2-agentic-workflow/README.md)
+- [V3 Documentation](iterations/v3-mcp-support/README.md)

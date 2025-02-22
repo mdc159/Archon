@@ -3,5 +3,5 @@
   "graphs": {
     "agent": "./archon_graph.py:agentic_flow"
   },
-  "env": ".env"
+  "env": "../.env"
 }

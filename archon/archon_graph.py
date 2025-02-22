@@ -10,6 +10,7 @@ from openai import AsyncOpenAI
 from supabase import Client
 import logfire
 import os
+import sys
 
 # Import the message classes from Pydantic AI
 from pydantic_ai.messages import (
@@ -17,7 +18,9 @@ from pydantic_ai.messages import (
     ModelMessagesTypeAdapter
 )
 
-from pydantic_ai_coder import pydantic_ai_coder, PydanticAIDeps, list_documentation_pages_helper
+# Add the parent directory to Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from archon.pydantic_ai_coder import pydantic_ai_coder, PydanticAIDeps, list_documentation_pages_helper
 
 # Load environment variables
 load_dotenv()
@@ -83,9 +86,11 @@ async def define_scope_with_reasoner(state: AgentState):
     result = await reasoner.run(prompt)
     scope = result.data
 
-    # Save the scope to a file
-    scope_path = os.path.join("workbench", "scope.md")
-    os.makedirs("workbench", exist_ok=True)
+    # Get the directory one level up from the current file
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(current_dir)
+    scope_path = os.path.join(parent_dir, "workbench", "scope.md")
+    os.makedirs(os.path.join(parent_dir, "workbench"), exist_ok=True)
 
     with open(scope_path, "w", encoding="utf-8") as f:
         f.write(scope)
