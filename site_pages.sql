@@ -3,11 +3,11 @@ create extension if not exists vector;
 
 -- Create the documentation chunks table
 create table site_pages (
-    id bigserial primary key,
-    url varchar not null,
+    id bigint primary key generated always as identity,
+    url text not null,
     chunk_number integer not null,
-    title varchar not null,
-    summary varchar not null,
+    title text not null,
+    summary text not null,
     content text not null,  -- Added content column
     metadata jsonb not null default '{}'::jsonb,  -- Added metadata column
     embedding vector(1536),  -- OpenAI embeddings are 1536 dimensions
@@ -30,10 +30,10 @@ create function match_site_pages (
   filter jsonb DEFAULT '{}'::jsonb
 ) returns table (
   id bigint,
-  url varchar,
+  url text,
   chunk_number integer,
-  title varchar,
-  summary varchar,
+  title text,
+  summary text,
   content text,
   metadata jsonb,
   similarity float
@@ -70,3 +70,16 @@ create policy "Allow public read access"
   for select
   to public
   using (true);
+
+-- Optionally, create policies for insert and update if needed
+-- create policy "Allow public insert access"
+--   on site_pages
+--   for insert
+--   to public
+--   with check (true);
+
+-- create policy "Allow public update access"
+--   on site_pages
+--   for update
+--   to public
+--   using (true);
