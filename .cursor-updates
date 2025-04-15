@@ -1,0 +1,2 @@
+- Created start.bat file for activating and launching the Python virtual environment 
+- Updated start.bat to launch Streamlit UI application automatically 
