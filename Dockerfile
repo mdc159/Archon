@@ -25,4 +25,4 @@ EXPOSE 8501
 EXPOSE 8100
 
 # Set the entrypoint to run Streamlit directly
-CMD ["streamlit", "run", "streamlit_ui.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "streamlit_ui.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.enableCORS=false"]
