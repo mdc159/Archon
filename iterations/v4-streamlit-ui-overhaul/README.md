@@ -129,7 +129,7 @@ The Agent Service tab allows you to manage the agent service:
 
 The MCP tab simplifies the process of configuring MCP for AI IDEs:
 
-- Select your IDE (Windsurf, Cursor, or Cline)
+- Select your IDE (Windsurf, Cursor, Cline, or Roo Code)
 - Generate configuration commands or JSON
 - Copy configuration to clipboard
 - Get step-by-step instructions for your specific IDE
@@ -177,7 +177,7 @@ The Docker implementation consists of two containers:
    - Implements the Model Context Protocol for AI IDE integration
    - Built from the mcp/Dockerfile
    - Communicates with the main container's Graph Service
-   - Provides a standardized interface for AI IDEs like Windsurf, Cursor, and Cline
+   - Provides a standardized interface for AI IDEs like Windsurf, Cursor, Cline and Roo Code
 
 When running with Docker, the `run_docker.py` script automates building and starting both containers with the proper configuration.
 

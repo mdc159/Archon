@@ -6,10 +6,12 @@
 
 <h3>🚀 **CURRENT VERSION** 🚀</h3>
 
-**[ V4 - Massive Streamlit UI Overhaul ]**
-*Comprehensive dashboard interface for managing Archon with Streamlit*
+**[ V6 - Tool Library and MCP Integration ]**
+*Prebuilt tools, examples, and MCP server integration*
 
 </div>
+
+> **🔄 IMPORTANT UPDATE (March 31st)**: Archon now includes a library of prebuilt tools, examples, and MCP server integrations. Archon can now incorporate these resources when building new agents, significantly enhancing capabilities and reducing hallucinations. Note that the examples/tool library for Archon is just starting out. Please feel free to contribute examples, MCP servers, and prebuilt tools!
 
 Archon is the world's first **"Agenteer"**, an AI agent designed to autonomously build, refine, and optimize other AI agents. 
 
@@ -20,7 +22,7 @@ Through its iterative development, Archon showcases the power of planning, feedb
 
 ## Important Links
 
-- The current version of Archon is V4 as mentioned above - see [V4 Documentation](iterations/v4-streamlit-ui-overhaul/README.md) for details.
+- The current version of Archon is V6 as mentioned above - see [V6 Documentation](iterations/v6-tool-library-integration/README.md) for details.
 
 - I **just** created the [Archon community](https://thinktank.ottomator.ai/c/archon/30) forum over in the oTTomator Think Tank! Please post any questions you have there!
 
@@ -34,9 +36,11 @@ Archon demonstrates three key principles in modern AI development:
 2. **Domain Knowledge Integration**: Seamless embedding of frameworks like Pydantic AI and LangGraph within autonomous workflows
 3. **Scalable Architecture**: Modular design supporting maintainability, cost optimization, and ethical AI practices
 
-## Getting Started with V4 (current version)
+## Getting Started with V6 (current version)
 
-Since V4 is the current version of Archon, all the code for V4 is in both the main directory and `archon/iterations/v4-streamlit-ui-overhaul` directory.
+Since V6 is the current version of Archon, all the code for V6 is in both the main directory and `archon/iterations/v6-tool-library-integration` directory.
+
+Note that the examples/tool library for Archon is just starting out. Please feel free to contribute examples, MCP servers, and prebuilt tools!
 
 ### Prerequisites
 - Docker (optional but preferred)
@@ -91,7 +95,7 @@ streamlit run streamlit_ui.py
 ### Setup Process
 
 After installation, follow the guided setup process in the Intro section of the Streamlit UI:
-- **Environment**: Configure your API keys and model settings
+- **Environment**: Configure your API keys and model settings - all stored in `workbench/env_vars.json`
 - **Database**: Set up your Supabase vector database
 - **Documentation**: Crawl and index the Pydantic AI documentation
 - **Agent Service**: Start the agent service for generating agents
@@ -100,6 +104,48 @@ After installation, follow the guided setup process in the Intro section of the 
 
 The Streamlit interface will guide you through each step with clear instructions and interactive elements.
 There are a good amount of steps for the setup but it goes quick!
+
+### Troubleshooting
+
+If you encounter any errors when using Archon, please first check the logs in the "Agent Service" tab.
+Logs specifically for MCP are also logged to `workbench/logs.txt` (file is automatically created) so please
+check there. The goal is for you to have a clear error message before creating a bug here in the GitHub repo
+
+### Updating Archon
+
+#### Option 1: Docker
+To get the latest updates for Archon when using Docker:
+
+```bash
+# Pull the latest changes from the repository (from within the archon directory)
+git pull
+
+# Rebuild and restart the containers with the latest changes
+python run_docker.py
+```
+
+The `run_docker.py` script will automatically:
+- Detect and remove any existing Archon containers (whether running or stopped)
+- Rebuild the containers with the latest code
+- Start fresh containers with the updated version
+
+#### Option 2: Local Python Installation
+To get the latest updates for Archon when using local Python installation:
+
+```bash
+# Pull the latest changes from the repository (from within the archon directory)
+git pull
+
+# Install any new dependencies
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# Restart the Streamlit UI
+# (If you're already running it, stop with Ctrl+C first)
+streamlit run streamlit_ui.py
+```
+
+This ensures you're always running the most recent version of Archon with all the latest features and bug fixes.
 
 ## Project Evolution
 
@@ -123,7 +169,7 @@ There are a good amount of steps for the setup but it goes quick!
 - Improved project structure and organization
 - [Learn more about V3](iterations/v3-mcp-support/README.md)
 
-### V4: Current - Streamlit UI Overhaul
+### V4: Streamlit UI Overhaul
 - Docker support
 - Comprehensive Streamlit interface for managing all aspects of Archon
 - Guided setup process with interactive tabs
@@ -133,9 +179,26 @@ There are a good amount of steps for the setup but it goes quick!
 - MCP configuration through the UI
 - [Learn more about V4](iterations/v4-streamlit-ui-overhaul/README.md)
 
+### V5: Multi-Agent Coding Workflow
+- Specialized refiner agents for different autonomously improving the initially generated agent
+- Prompt refiner agent for optimizing system prompts
+- Tools refiner agent for specialized tool implementation
+- Agent refiner for optimizing agent configuration and dependencies
+- Cohesive initial agent structure before specialized refinement
+- Improved workflow orchestration with LangGraph
+- [Learn more about V5](iterations/v5-parallel-specialized-agents/README.md)
+
+### V6: Current - Tool Library and MCP Integration
+- Comprehensive library of prebuilt tools, examples, and agent templates
+- Integration with MCP servers for massive amounts of prebuilt tools
+- Advisor agent that recommends relevant tools and examples based on user requirements
+- Automatic incorporation of prebuilt components into new agents
+- Specialized tools refiner agent also validates and optimizes MCP server configurations
+- Streamlined access to external services through MCP integration
+- Reduced development time through component reuse
+- [Learn more about V6](iterations/v6-tool-library-integration/README.md)
+
 ### Future Iterations
-- V5: Multi-Agent Coding Workflow - Specialized agents for different parts of the agent creation process
-- V6: Tool Library and Example Integration - Pre-built external tool and agent examples incorporation
 - V7: LangGraph Documentation - Allow Archon to build Pydantic AI AND LangGraph agents
 - V8: Self-Feedback Loop - Automated validation and error correction
 - V9: Self Agent Execution - Testing and iterating on agents in an isolated environment
@@ -151,7 +214,24 @@ There are a good amount of steps for the setup but it goes quick!
 - Other vector databases besides Supabase
 - [Local AI package](https://github.com/coleam00/local-ai-packaged) for the agent environment
 
-## Architecture
+## Archon Agents Architecture
+
+The below diagram from the LangGraph studio is a visual representation of the Archon agent graph.
+
+<img src="public/ArchonGraph.png" alt="Archon Graph" />
+
+The flow works like this:
+
+1. You describe the initial AI agent you want to create
+2. The reasoner LLM creates the high level scope for the agent
+3. The primary coding agent uses the scope and documentation to create the initial agent
+4. Control is passed back to you to either give feedback or ask Archon to 'refine' the agent autonomously
+5. If refining autonomously, the specialized agents are invoked to improve the prompt, tools, and agent configuration
+6. The primary coding agent is invoked again with either user or specialized agent feedback
+7. The process goes back to step 4 until you say the agent is complete
+8. Once the agent is complete, Archon spits out the full code again with instructions for running it
+
+## File Architecture
 
 ### Core Files
 - `streamlit_ui.py`: Comprehensive web interface for managing all aspects of Archon
@@ -168,13 +248,22 @@ There are a good amount of steps for the setup but it goes quick!
 - `archon/`: Core agent and workflow implementation
   - `archon_graph.py`: LangGraph workflow definition and agent coordination
   - `pydantic_ai_coder.py`: Main coding agent with RAG capabilities
+  - `refiner_agents/`: Specialized agents for refining different aspects of the created agent
+    - `prompt_refiner_agent.py`: Optimizes system prompts
+    - `tools_refiner_agent.py`: Specializes in tool implementation
+    - `agent_refiner_agent.py`: Refines agent configuration and dependencies
   - `crawl_pydantic_ai_docs.py`: Documentation crawler and processor
 
 ### Utilities
 - `utils/`: Utility functions and database setup
   - `utils.py`: Shared utility functions
   - `site_pages.sql`: Database setup commands
+
+### Workbench
+- `workbench/`: Created at runtime, files specific to your environment
   - `env_vars.json`: Environment variables defined in the UI are stored here (included in .gitignore, file is created automatically)
+  - `logs.txt`: Low level logs for all Archon processes go here
+  - `scope.md`: The detailed scope document created by the reasoner model at the start of each Archon execution
 
 ## Deployment Options
 - **Docker Containers**: Run Archon in isolated containers with all dependencies included
@@ -194,7 +283,7 @@ The Docker implementation consists of two containers:
    - Implements the Model Context Protocol for AI IDE integration
    - Built from the mcp/Dockerfile
    - Communicates with the main container's Graph Service
-   - Provides a standardized interface for AI IDEs like Windsurf, Cursor, and Cline
+   - Provides a standardized interface for AI IDEs like Windsurf, Cursor, Cline, and Roo Code
 
 When running with Docker, the `run_docker.py` script automates building and starting both containers with the proper configuration.
 
@@ -232,3 +321,5 @@ For version-specific details:
 - [V2 Documentation](iterations/v2-agentic-workflow/README.md)
 - [V3 Documentation](iterations/v3-mcp-support/README.md)
 - [V4 Documentation](iterations/v4-streamlit-ui-overhaul/README.md)
+- [V5 Documentation](iterations/v5-parallel-specialized-agents/README.md)
+- [V6 Documentation](iterations/v6-tool-library-integration/README.md)

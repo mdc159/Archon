@@ -364,12 +364,12 @@ def mcp_tab():
             """)
         elif selected_ide == "Cline":
             st.markdown("""
-            #### How to use in Cline:
-            1. From the Cline extension, click the "MCP Server" tab
+            #### How to use in Cline or Roo Code:
+            1. From the Cline/Roo Code extension, click the "MCP Server" tab
             2. Click the "Edit MCP Settings" button
             3. The MCP settings file should be displayed in a tab in VS Code
             4. Paste the JSON from your preferred configuration tab above
-            5. Cline will automatically detect and start the MCP server
+            5. Cline/Roo Code will automatically detect and start the MCP server
             """)
 
 async def chat_tab():
@@ -511,7 +511,7 @@ def intro_tab():
         For integration with AI IDEs:
         
         1. Go to the **MCP** tab
-        2. Select your IDE (Windsurf, Cursor, or Cline)
+        2. Select your IDE (Windsurf, Cursor, Cline, or Roo Code)
         3. Follow the instructions to configure your IDE
         
         This enables you to use Archon directly from your AI-powered IDE.
