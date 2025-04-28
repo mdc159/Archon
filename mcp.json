@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ]
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "env": {
+        "BRAVE_API_KEY": "YBSADygSM265Mzh_33lzb9XMr4rdN1Ev"
+      }
+    },
+    "archon": {
+      "command": "/app/venv/bin/python",
+      "args": [
+        "/app/mcp/mcp_server.py"
+      ]
+    }
+  }
+} 
