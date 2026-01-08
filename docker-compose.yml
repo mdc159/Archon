@@ -99,7 +99,6 @@ services:
     depends_on:
       archon-server:
         condition: service_healthy
-      
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:
@@ -244,10 +243,5 @@ networks:
       # Use reliable DNS servers to prevent DNS resolution failures
       # during Docker builds and container runtime
       com.docker.network.bridge.enable_ip_masquerade: "true"
-    # Configure DNS servers for all containers on this network
-    # This prevents DNS resolution failures when systemd-resolved (127.0.0.53) misbehaves
-    # Primary: Google DNS, Secondary: Cloudflare DNS
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
-      - 127.0.0.53  # Keep systemd-resolved as fallback for local resolution
+    # Note: DNS configuration should be done at the service level if needed
+    # using the 'dns' key in individual service definitions
