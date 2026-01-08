@@ -208,6 +208,9 @@ services:
   archon-frontend:
     build: ./archon-ui-main
     container_name: archon-ui
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
     ports:
       - "${ARCHON_UI_PORT:-3737}:3737"
     environment:
