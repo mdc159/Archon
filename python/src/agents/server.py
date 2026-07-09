@@ -25,6 +25,7 @@ from pydantic import BaseModel
 
 # Import our PydanticAI agents
 from .document_agent import DocumentAgent
+from .hermes_agent import HermesAgent
 from .rag_agent import RagAgent
 
 # Configure logging
@@ -55,6 +56,7 @@ class AgentResponse(BaseModel):
 AVAILABLE_AGENTS = {
     "document": DocumentAgent,
     "rag": RagAgent,
+    "hermes": HermesAgent,
 }
 
 # Global credentials storage
@@ -173,12 +175,34 @@ async def run_agent(request: AgentRequest):
 
         agent = app.state.agents[request.agent_type]
 
-        # Prepare dependencies for the agent
-        deps = {
-            "context": request.context or {},
-            "options": request.options or {},
-            "mcp_endpoint": os.getenv("MCP_SERVICE_URL", "http://archon-mcp:8051"),
-        }
+        # Build typed dependencies per agent (mirrors the /stream endpoint)
+        ctx = request.context or {}
+        if request.agent_type == "rag":
+            from .rag_agent import RagDependencies
+
+            deps = RagDependencies(
+                source_filter=ctx.get("source_filter"),
+                match_count=ctx.get("match_count", 5),
+                project_id=ctx.get("project_id"),
+            )
+        elif request.agent_type == "document":
+            from .document_agent import DocumentDependencies
+
+            deps = DocumentDependencies(
+                project_id=ctx.get("project_id", ""),
+                current_document_id=ctx.get("current_document_id"),
+            )
+        elif request.agent_type == "hermes":
+            from .hermes_agent import HermesDependencies
+
+            deps = HermesDependencies(
+                match_count=ctx.get("match_count", 8),
+                project_id=ctx.get("project_id"),
+            )
+        else:
+            from .base_agent import ArchonDependencies
+
+            deps = ArchonDependencies()
 
         # Run the agent
         result = await agent.run(request.prompt, deps)
@@ -240,11 +264,17 @@ async def stream_agent(agent_type: str, request: AgentRequest):
                 from .document_agent import DocumentDependencies
 
                 deps = DocumentDependencies(
-                    project_id=request.context.get("project_id") if request.context else None,
+                    project_id=request.context.get("project_id") if request.context else "",
                     user_id=request.context.get("user_id") if request.context else None,
                 )
+            elif agent_type == "hermes":
+                from .hermes_agent import HermesDependencies
+
+                deps = HermesDependencies(
+                    match_count=request.context.get("match_count", 8) if request.context else 8,
+                    project_id=request.context.get("project_id") if request.context else None,
+                )
             else:
-                # Default dependencies
                 from .base_agent import ArchonDependencies
 
                 deps = ArchonDependencies()
@@ -259,7 +289,7 @@ async def stream_agent(agent_type: str, request: AgentRequest):
 
                 # Get the final structured result
                 try:
-                    final_result = await stream.get_data()
+                    final_result = await stream.get_output()
                     event_data = json.dumps({"type": "stream_complete", "content": final_result})
                     yield f"data: {event_data}\n\n"
                 except Exception:

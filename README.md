@@ -103,6 +103,17 @@ This new vision for Archon replaces the old one (the agenteer). Archon used to b
    - **MCP Server**: Protocol interface for AI clients (Port: 8051)
    - **UI**: Web interface (Port: 3737)
 
+   Optional agent services are started with Docker Compose profiles:
+   ```bash
+   # Start the PydanticAI agents service too (Port: 8052)
+   docker compose --profile agents up --build -d
+
+   # Start both agents and agent work orders
+   docker compose --profile agents --profile work-orders up --build -d
+   ```
+
+   To make the agents service start automatically with normal Docker Compose commands, add `COMPOSE_PROFILES=agents` to your `.env` file.
+
    Ports are configurable in your .env as well!
 
 5. **Configure API Keys**:
@@ -209,7 +220,7 @@ The reset script safely removes all tables, functions, triggers, and policies wi
 | **Web Interface**          | archon-ui                  | http://localhost:3737 | Main dashboard and controls                |
 | **API Service**            | archon-server              | http://localhost:8181 | Web crawling, document processing          |
 | **MCP Server**             | archon-mcp                 | http://localhost:8051 | Model Context Protocol interface           |
-| **Agents Service**         | archon-agents              | http://localhost:8052 | AI/ML operations, reranking                |
+| **Agents Service** *(optional)* | archon-agents         | http://localhost:8052 | PydanticAI document, RAG, and specialized expert agents |
 | **Agent Work Orders** *(optional)* | archon-agent-work-orders | http://localhost:8053 | Workflow execution with Claude Code CLI    |  
 
 ## Upgrading
@@ -251,6 +262,7 @@ To upgrade Archon to the latest version:
 - **Multi-LLM Support**: Works with OpenAI, Ollama, and Google Gemini models
 - **RAG Strategies**: Hybrid search, contextual embeddings, and result reranking for optimal AI responses
 - **Real-time Streaming**: Live responses from AI agents with progress tracking
+- **Specialized Expert Agents**: Optional PydanticAI agents can be locked to specific knowledge sources, including a Hermes documentation expert that answers Hermes architecture and configuration questions from the ingested Hermes docs
 
 ### 📋 Project & Task Management
 
@@ -299,7 +311,7 @@ Archon uses true microservices architecture with clear separation of concerns:
 | **Frontend**             | `archon-ui-main/`              | Web interface and dashboard      | React, TypeScript, TailwindCSS, Socket.IO client                   |
 | **Server**               | `python/src/server/`           | Core business logic and APIs     | FastAPI, service layer, Socket.IO broadcasts, all ML/AI operations |
 | **MCP Server**           | `python/src/mcp/`              | MCP protocol interface           | Lightweight HTTP wrapper, MCP tools, session management            |
-| **Agents**               | `python/src/agents/`           | PydanticAI agent hosting         | Document and RAG agents, streaming responses                       |
+| **Agents** *(optional)*  | `python/src/agents/`           | PydanticAI agent hosting         | Document, RAG, Hermes docs expert, and streaming responses         |
 | **Agent Work Orders** *(optional)* | `python/src/agent_work_orders/` | Workflow execution engine | Claude Code CLI automation, repository management, SSE updates |
 
 ### Communication Patterns
@@ -308,6 +320,24 @@ Archon uses true microservices architecture with clear separation of concerns:
 - **Socket.IO**: Real-time updates from Server to Frontend
 - **MCP Protocol**: AI clients connect to MCP Server via SSE or stdio
 - **No Direct Imports**: Services are truly independent with no shared code dependencies
+
+### Agent Profiles
+
+The `archon-agents` service is optional and runs only when the `agents` Docker Compose profile is enabled. It exposes PydanticAI agents at `http://localhost:8052`:
+
+- `document`: conversational document management
+- `rag`: general RAG search over Archon knowledge sources
+- `hermes`: Hermes Agent documentation expert, locked to the ingested Hermes docs source for architecture and configuration questions
+
+Use `/agents/list` to see available agents and `/agents/run` to call one directly:
+
+```bash
+curl -s http://localhost:8052/agents/list
+
+curl -s -X POST http://localhost:8052/agents/run \
+  -H "Content-Type: application/json" \
+  -d '{"agent_type":"hermes","prompt":"How does Hermes MCP configuration work?","context":{"match_count":6}}'
+```
 
 ### Key Architectural Benefits
 
@@ -323,7 +353,7 @@ By default, Archon services run on the following ports:
 - **archon-ui**: 3737
 - **archon-server**: 8181
 - **archon-mcp**: 8051
-- **archon-agents**: 8052 (optional)
+- **archon-agents**: 8052 (optional; enable with `--profile agents` or `COMPOSE_PROFILES=agents`)
 - **archon-agent-work-orders**: 8053 (optional)
 
 ### Changing Ports

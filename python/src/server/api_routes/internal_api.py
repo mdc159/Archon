@@ -90,6 +90,9 @@ async def get_agent_credentials(request: Request) -> dict[str, Any]:
             "TASK_AGENT_MODEL": await credential_service.get_credential(
                 "TASK_AGENT_MODEL", default="openai:gpt-4o"
             ),
+            "HERMES_AGENT_MODEL": await credential_service.get_credential(
+                "HERMES_AGENT_MODEL", default="openai:gpt-4o"
+            ),
             # Rate limiting settings
             "AGENT_RATE_LIMIT_ENABLED": await credential_service.get_credential(
                 "AGENT_RATE_LIMIT_ENABLED", default="true"
